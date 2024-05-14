@@ -2,7 +2,7 @@
 
 ## Summary
 
-In this guide, we will explore various components of regular expressions (regex), which are powerful tools for pattern matching and text manipulation. We'll cover essential aspects of regex, such as anchors, quantifiers, the OR operator, character classes, flags, grouping and capturing, bracket expressions, greedy and lazy matches, boundaries, back-references, and look-ahead and look-behind assertions. By understanding these elements, you'll be able to craft complex regex patterns to suit a variety of text-processing needs. Here is a basic regex example: ^(\d{3})-(\d{2})-(\d{4})$.
+In this guide, we will explore various components of regular expressions (regex), which are powerful tools for pattern matching and text manipulation. We'll cover essential aspects of regex, such as anchors, quantifiers, the OR operator, character classes, flags, grouping and capturing, bracket expressions, greedy and lazy matches, boundaries, back-references, and look-ahead and look-behind assertions. By understanding these elements, you'll be able to craft complex regex patterns to suit a variety of text-processing needs. Here is a regex example to match URLs: `^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$`.
 
 ## Table of Contents
 
@@ -24,90 +24,165 @@ In this guide, we will explore various components of regular expressions (regex)
 
 Anchors are special characters in regex that match positions within a string, rather than actual characters. The two main anchors are:
 
-^ - Matches the start of a string.
-$ - Matches the end of a string.
-Example: ^Hello matches "Hello" at the beginning of a string, and world$ matches "world" at the end of a string.
+- `^` - Matches the start of a string.
+- `$` - Matches the end of a string.
+
+Example in URL regex:
+
+```regex
+^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$
+```
+
+- `^` asserts the start of the string.
+- `$` asserts the end of the string.
 
 ### Quantifiers
 
 Quantifiers specify how many instances of a character, group, or character class must be present for a match to occur. Common quantifiers include:
 
-- - Matches 0 or more occurrences.
+- `*` - Matches 0 or more occurrences.
+- `+` - Matches 1 or more occurrences.
+- `?` - Matches 0 or 1 occurrence.
+- `{n}` - Matches exactly n occurrences.
+- `{n,}` - Matches n or more occurrences.
+- `{n,m}` - Matches between n and m occurrences.
 
-* - Matches 1 or more occurrences.
-    ? - Matches 0 or 1 occurrence.
-    {n} - Matches exactly n occurrences.
-    {n,} - Matches n or more occurrences.
-    {n,m} - Matches between n and m occurrences.
-    Example: a{2,4} matches "aa", "aaa", or "aaaa".
+Example in URL regex:
+
+```regex
+^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$
+```
+
+- `https?` matches "http" or "https" (`?` matches 0 or 1 occurrence of "s").
+- `[a-z\.]{2,6}` matches 2 to 6 lowercase letters or dots.
+- `([\/\w \.-]*)*` matches any number of directories and file names.
 
 ### OR Operator
 
-The OR operator | allows for matching one pattern or another.
+The OR operator `|` allows for matching one pattern or another.
 
-Example: cat|dog matches either "cat" or "dog".
+Example (simplified):
+
+```regex
+http|https
+```
+
+Matches either "http" or "https".
+
+In the URL regex, the use of `?` is equivalent to `|` in some cases by indicating optional elements.
 
 ### Character Classes
 
-Character classes match any one of a set of characters. They are defined using square brackets [].
+Character classes match any one of a set of characters. They are defined using square brackets `[]`.
 
-[abc] - Matches any one of the characters a, b, or c.
-[^abc] - Matches any character except a, b, or c.
-[a-z] - Matches any lowercase letter.
-[0-9] - Matches any digit.
-Example: [A-Za-z] matches any uppercase or lowercase letter.
+Example in URL regex:
+
+```regex
+^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$
+```
+
+- `[\da-z\.-]` matches any digit, lowercase letter, dot, or hyphen.
+- `[a-z\.]` matches any lowercase letter or dot.
+- `[\/\w \.-]` matches any slash, word character, space, dot, or hyphen.
 
 ### Flags
 
-Flags modify the behavior of the regex engine. They are placed at the end of the regex pattern, after a closing delimiter (usually / in many programming languages).
+Flags modify the behavior of the regex engine. They are placed at the end of the regex pattern, after a closing delimiter (usually `/` in many programming languages).
 
-i - Case-insensitive matching.
-g - Global matching (find all matches).
-m - Multi-line matching.
-Example: /hello/i matches "hello", "Hello", or "HELLO".
+Example (not in the URL regex,):
+
+```regex
+/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i
+```
+
+- `i` - Case-insensitive matching.
 
 ### Grouping and Capturing
 
-Parentheses () are used for grouping parts of a regex pattern and capturing the matched sub-patterns.
+Parentheses `()` are used for grouping parts of a regex pattern and capturing the matched sub-patterns.
 
-Example: (abc)+ matches one or more repetitions of "abc".
+Example in URL regex:
+
+```regex
+^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$
+```
+
+- `(https?:\/\/)?` captures the optional "http://" or "https://".
+- `([\da-z\.-]+)` captures the domain name.
+- `([a-z\.]{2,6})` captures the top-level domain (TLD).
+- `([\/\w \.-]*)*` captures the path and optional file names.
 
 ### Bracket Expressions
 
-Bracket expressions [] define a set of characters to match.
+Bracket expressions `[]` define a set of characters to match.
 
-Example: [0-9] matches any single digit.
+Example in URL regex:
+
+```regex
+[\da-z\.-]
+```
+
+- Matches any digit (`\d`), lowercase letter (`a-z`), dot (`.`), or hyphen (`-`).
 
 ### Greedy and Lazy Match
 
-Quantifiers are greedy by default, meaning they match as much text as possible. Adding a ? makes them lazy, matching as little text as possible.
+Quantifiers are greedy by default, meaning they match as much text as possible. Adding a `?` makes them lazy, matching as little text as possible.
 
-Greedy: a._b matches the longest string starting with "a" and ending with "b".
-Lazy: a._?b matches the shortest string starting with "a" and ending with "b".
+Example in URL regex (note: not explicitly shown in the given regex):
+
+```regex
+.*?
+```
+
+- Greedy: `.*` matches as much text as possible.
+- Lazy: `.*?` matches as little text as possible.
 
 ### Boundaries
 
 Word boundaries are used to match positions where a word starts or ends.
 
-\b - Matches a word boundary.
-\B - Matches a non-word boundary.
-Example: \bword\b matches "word" surrounded by word boundaries.
+Example (not in the URL regex):
+
+```regex
+\bword\b
+```
+
+- Matches "word" surrounded by word boundaries.
 
 ### Back-references
 
 Back-references match the same text as previously matched by a capturing group.
 
-Example: (\\d)\\1 matches two consecutive identical digits.
+Example (not in the URL regex):
+
+```regex
+(\d)\1
+```
+
+- Matches two consecutive identical digits.
 
 ### Look-ahead and Look-behind
 
 Look-ahead and look-behind assertions match a group before or after a specified pattern without including it in the result.
 
-Positive look-ahead: (?=pattern)
-Negative look-ahead: (?!pattern)
-Positive look-behind: (?<=pattern)
-Negative look-behind: (?<!pattern)
-Example: foo(?=bar) matches "foo" only if it is followed by "bar".
+Example (not in the URL regex):
+
+- Positive look-ahead: `(?=pattern)`
+- Negative look-ahead: `(?!pattern)`
+- Positive look-behind: `(?<=pattern)`
+- Negative look-behind: `(?<!pattern)`
+
+```regex
+foo(?=bar)
+```
+
+- Matches "foo" only if it is followed by "bar".
+
+```regex
+foo(?!bar)
+```
+
+- Matches "foo" only if it is not followed by "bar".
 
 ## Author
 
