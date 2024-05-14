@@ -173,16 +173,16 @@ Example (not in the URL regex):
 - Negative look-behind: `(?<!pattern)`
 
 ```regex
-foo(?=bar)
+butt(?=hole)
 ```
 
-- Matches "foo" only if it is followed by "bar".
+- Matches "butt" only if it is followed by "hole".
 
 ```regex
-foo(?!bar)
+butt(?!hole)
 ```
 
-- Matches "foo" only if it is not followed by "bar".
+- Matches "butt" only if it is not followed by "hole".
 
 ## Author
 
